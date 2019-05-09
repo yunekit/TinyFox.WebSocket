@@ -524,7 +524,7 @@ namespace TinyFox.WebSocket
         #region <静态方法>
 
         /// <summary>
-        /// 是否是WebSocket连接请求
+        /// 当前请求是否是WebSocket连接请求
         /// </summary>
         /// <param name="env">Owin字典</param>
         /// <returns></returns>
