@@ -16,9 +16,7 @@ namespace test
         {
             TinyFoxService.Port = 8080;
 
-            var startup = new Startup();
-
-            TinyFoxService.Start(startup.OwinMain);
+            TinyFoxService.Start(new Startup().OwinMain);
 
             while (true) {
                 Thread.Sleep(1000);
