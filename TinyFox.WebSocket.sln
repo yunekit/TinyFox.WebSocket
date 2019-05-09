@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.352
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TinyFox.WebSocket", "WebSocket\TinyFox.WebSocket.csproj", "{D52B40B7-6991-4CA8-8E74-9A7E185A046D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "test\test.csproj", "{01357E88-97DF-4A2B-A433-C0EF61117594}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D52B40B7-6991-4CA8-8E74-9A7E185A046D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D52B40B7-6991-4CA8-8E74-9A7E185A046D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D52B40B7-6991-4CA8-8E74-9A7E185A046D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D52B40B7-6991-4CA8-8E74-9A7E185A046D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01357E88-97DF-4A2B-A433-C0EF61117594}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01357E88-97DF-4A2B-A433-C0EF61117594}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01357E88-97DF-4A2B-A433-C0EF61117594}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01357E88-97DF-4A2B-A433-C0EF61117594}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8B01E461-82EB-4589-8C58-219E9034148B}
+	EndGlobalSection
+EndGlobal
