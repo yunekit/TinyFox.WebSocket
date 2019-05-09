@@ -6,6 +6,8 @@
 /.git
 /test/obj
 /test/bin
+/test/*.csproj.user
 /WebSocket/bin
 /WebSocket/obj
+/WebSocket/*.csproj.user
 /packages
