@@ -100,7 +100,7 @@ namespace TinyFox.WebSocket
         /// <summary>
         /// 与客户端握手完成事件
         /// </summary>
-        /// <param name="sender"></param>
+        ///<param name="content">当前会话对象</param>
         protected virtual void OnAccept(WSContext content) { }
 
         /// <summary>

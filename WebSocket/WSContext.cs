@@ -71,6 +71,10 @@
 
         #region <构造与析构>
 
+        /// <summary>
+        /// 实例化一个WSContext上下文对象
+        /// </summary>
+        /// <param name="ws"></param>
         public WSContext(WebSocket ws)
         {
             _ws = ws;
@@ -83,6 +87,10 @@
             QueryString = ws.Query;
         }
 
+
+        /// <summary>
+        /// 析构函数
+        /// </summary>
         ~WSContext()
         {
             if (_ws == null) return;
