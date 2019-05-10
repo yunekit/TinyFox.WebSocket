@@ -70,7 +70,6 @@ namespace TinyFox.WebSocket
                 //激活OnAccept事件，通知应用层握手已经完成
                 OnAccept(_content);
 
-
                 //开始接受远端数据
                 //本方法只需在连接成功后调用一次，然后就能不断继续。
                 _webSocket.StartAsync();

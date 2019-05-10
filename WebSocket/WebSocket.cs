@@ -298,15 +298,21 @@ namespace TinyFox.WebSocket
         }
 
 
+
         /// <summary>
         /// 关闭连接
         /// </summary>
-        internal void Close()
+        /// <param name="code">状态码</param>
+        /// <param name="reason">关闭原因</param>
+        internal void Close(int code=1000, string reason = null)
         {
             if (_isClosed) return;
             _isClosed = true;
 
-            _closeAsync(1000, null, CancellationToken.None).ContinueWith(t =>
+            if (code < 1000) code = 1000;
+            if (code >= 5000) code = 4999;
+
+            _closeAsync(code, reason, CancellationToken.None).ContinueWith(t =>
             {
                 //清理异常
                 if (t.IsFaulted && t.Exception != null) t.Exception.Handle(_ => true);

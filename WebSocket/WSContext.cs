@@ -115,7 +115,8 @@
         /// <summary>
         /// 关闭与客户端的连接
         /// </summary>
-        public void Close() { _ws.Close(); }
+        public void Close(int code = 1000, string reason = null) { _ws.Close(code, reason); }
+
 
         #endregion
 
