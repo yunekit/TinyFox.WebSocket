@@ -7,12 +7,12 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>LiuBing</Authors>
     <Company>www.linuxdot.net</Company>
-    <AssemblyVersion>1.0.0</AssemblyVersion>
-    <FileVersion>1.0.0</FileVersion>
-    <Version>1.0.0</Version>
+    <AssemblyVersion>1.1.0</AssemblyVersion>
+    <FileVersion>1.1.0</FileVersion>
+    <Version>1.1.0</Version>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/jws-admin/TinyFox.WebSocket</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/yuneike/TinyFox.WebSocket</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
