@@ -341,7 +341,7 @@ namespace TinyFox.WebSocket
         /// <param name="bytMessage">UTF8文本的字节数据</param>
         private void SendTextBytes(byte[] bytMessage)
         {
-            if (bytMessage == null || bytMessage.Length < 1)
+            if (bytMessage == null)
             {
                 var err = new ArgumentNullException();
                 _webSocketCompSource.TrySetException(err);
