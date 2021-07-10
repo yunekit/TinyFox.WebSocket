@@ -81,10 +81,31 @@ namespace TinyFox.WebSocket
 
         #region <共用委托>
 
+        /// <summary>
+        /// 表示文本数据读取完成的委托
+        /// </summary>
+        /// <param name="ws"></param>
+        /// <param name="message"></param>
         public delegate void DelegateReadComplete(WebSocket ws, string message);
 
+        /// <summary>
+        /// 表示发送了二进制数据读取事件的委托
+        /// </summary>
+        /// <param name="ws"></param>
+        /// <param name="buffer"></param>
+        /// <param name="endOfMessage"></param>
+        public delegate void DelegateReadByteComplete(WebSocket ws, ArraySegment<byte> buffer, bool endOfMessage);
+
+        /// <summary>
+        /// 表示文本数据发送完成的委托
+        /// </summary>
+        /// <param name="ws"></param>
         public delegate void DelegateWriteComplete(WebSocket ws);
 
+        /// <summary>
+        /// 表示客户端发生关闭事件的委托
+        /// </summary>
+        /// <param name="ws"></param>
         public delegate void DelegateCloseComplete(WebSocket ws);
 
         #endregion
@@ -152,7 +173,12 @@ namespace TinyFox.WebSocket
         /// <summary>
         /// 数据读取完成
         /// </summary>
-        public DelegateReadComplete OnRead;
+        public DelegateReadComplete OnReadMessage;
+
+        /// <summary>
+        /// 二制制数据收取事件
+        /// </summary>
+        public DelegateReadByteComplete OnReadBytes;
 
         /// <summary>
         /// 连接已经断开
@@ -304,7 +330,7 @@ namespace TinyFox.WebSocket
         /// </summary>
         /// <param name="code">状态码</param>
         /// <param name="reason">关闭原因</param>
-        internal void Close(int code=1000, string reason = null)
+        internal void Close(int code = 1000, string reason = null)
         {
             if (_isClosed) return;
             _isClosed = true;
@@ -334,8 +360,10 @@ namespace TinyFox.WebSocket
         /// </summary>
         private bool _writting = false;
 
+
+
         /// <summary>
-        /// 发送以字节数组表示的文本内容
+        /// 非阻塞发送以字节数组表示的文本内容
         /// <para>强调：必须是UTF8编码的文本数据</para>
         /// </summary>
         /// <param name="bytMessage">UTF8文本的字节数据</param>
@@ -351,22 +379,25 @@ namespace TinyFox.WebSocket
             if (_isClosed) throw new Exception("WebSocket Is Closed.");
             if (_writting) throw new Exception("WebSocket Is Writting.");
 
-            _writting = true;
             try
             {
+                _writting = true;
                 var t = _sendAsync(new ArraySegment<byte>(bytMessage), 1, true, CancellationToken.None);
                 t.ContinueWith(InternalWriteComplete);
             }
             catch (Exception e)
             {
+                _writting = false;
                 _webSocketCompSource.TrySetException(e);
                 throw e;
             }
         }
 
 
+
+
         /// <summary>
-        /// 发送UTF8字符集文本
+        /// 非阻塞发送UTF8字符集文本
         /// </summary>
         /// <param name="message">UTF8文本内容</param>
         public void SendMessage(string message)
@@ -383,6 +414,89 @@ namespace TinyFox.WebSocket
         {
             SendTextBytes(encoding.GetBytes(message));
         }
+
+        /// <summary>
+        /// 异步发送文本数据
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="encoding"></param>
+        public async Task SendMessageAsync(string message, Encoding encoding)
+        {
+
+            if (message == null) throw new ArgumentNullException("message");
+            if (_isClosed) throw new Exception("WebSocket Is Closed.");
+            if (_writting) throw new Exception("WebSocket Is Writting.");
+
+            var bytMessage = encoding.GetBytes(message);
+            try
+            {
+                _writting = true;
+                await _sendAsync(new ArraySegment<byte>(bytMessage), 1, true, CancellationToken.None);
+                _writting = false;
+            }
+            catch (Exception e)
+            {
+                _writting = false;
+                _webSocketCompSource.TrySetException(e);
+                throw e;
+            }
+        }
+
+
+
+
+        /// <summary>
+        /// 非阻塞发送二进制数据
+        /// </summary>
+        /// <param name="buffer">二进制数据</param>
+        /// <param name="isEndMessage">本次发送是否是当前发送任务的最后一次</param>
+        public void SendBytes(ArraySegment<byte> buffer, bool isEndMessage)
+        {
+
+            if (_isClosed) throw new Exception("WebSocket Is Closed.");
+            if (_writting) throw new Exception("WebSocket Is Writting.");
+
+            try
+            {
+                _writting = true;
+                var t = _sendAsync(buffer, 2, isEndMessage, CancellationToken.None);
+                t.ContinueWith(InternalWriteComplete);
+            }
+            catch (Exception e)
+            {
+                _writting = false;
+                _webSocketCompSource.TrySetException(e);
+                throw e;
+            }
+        }
+
+
+        /// <summary>
+        /// 异步发送二制数数据
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="isEndMessage"></param>
+        /// <returns></returns>
+        public async Task SendBytesAsync(ArraySegment<byte> buffer, bool isEndMessage)
+        {
+
+            if (_isClosed) throw new Exception("WebSocket Is Closed.");
+            if (_writting) throw new Exception("WebSocket Is Writting.");
+
+            try
+            {
+                _writting = true;
+                await _sendAsync(buffer, 2, isEndMessage, CancellationToken.None);
+                _writting = false;
+            }
+            catch (Exception e)
+            {
+                _writting = false;
+                _webSocketCompSource.TrySetException(e);
+                throw e;
+            }
+        }
+
 
 
         /// <summary>
@@ -472,14 +586,13 @@ namespace TinyFox.WebSocket
         /// <param name="type"></param>
         /// <param name="endOfMessage"></param>
         /// <param name="size"></param>
-        /// <param name="error"></param>
         private void InternalReadComplte(ArraySegment<byte> buffer, int type, bool endOfMessage, int size)
         {
 
             // 只接受客户端文本数据，否则关闭，如果需要接收二进制数据，请自行添加处理方法
             // type==8:对端已关闭;
             // type =2:二进制数据, 本类目前暂不作支持二进制支持，可以自行扩展
-            if (type == 8 || type == 2)
+            if (type == 8)
             {
                 _isClosed = true;
 
@@ -489,6 +602,20 @@ namespace TinyFox.WebSocket
 
                 if (OnClose != null) { OnClose(this); OnClose = null; }
                 _webSocketCompSource.TrySetResult(1);
+                return;
+            }
+
+            // 如果是二进制数据
+            if (type == 2)
+            {
+                var byts = new byte[size];
+                Buffer.BlockCopy(buffer.Array, 0, byts, 0, size);
+
+                //通知应用层
+                OnReadBytes?.Invoke(this, new ArraySegment<byte>(byts), endOfMessage);
+
+                //继续接收
+                InternalRealRead(buffer.Array);
                 return;
             }
 
@@ -503,7 +630,7 @@ namespace TinyFox.WebSocket
                 _lastReadData = null;
 
                 //通知应用层
-                OnRead?.Invoke(this, Encoding.UTF8.GetString(data));
+                OnReadMessage?.Invoke(this, Encoding.UTF8.GetString(data));
 
                 //继续接收
                 InternalRealRead(buffer.Array);

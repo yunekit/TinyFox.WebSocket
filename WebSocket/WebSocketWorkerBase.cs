@@ -48,7 +48,8 @@ namespace TinyFox.WebSocket
             {
                 OnSend = (ws) => OnSendComplete(_content),
                 OnClose = (ws) => OnClose(_content),
-                OnRead = (ws, txt) => OnMessage(_content, txt)
+                OnReadMessage = (ws, txt) => OnMessage(_content, txt),
+                OnReadBytes = (ws, byts, end) => OnReadyBytes(_content, byts, end)
             };
         }
 
@@ -110,12 +111,19 @@ namespace TinyFox.WebSocket
 
 
         /// <summary>
-        /// 接收到客户端数据事件
+        /// 接收到客户端文本数据的事件
         /// </summary>
         /// <param name="content">会话对象</param>
         /// <param name="message">内容</param>
         protected abstract void OnMessage(WSContext content, string message);
 
+        /// <summary>
+        /// 接收到客户端发送过来的一段二进制数据的事件
+        /// </summary>
+        /// <param name="context">WS会话对象</param>
+        /// <param name="buffer">数据</param>
+        /// <param name="endOfMessage">是否是连续数据块的最后一块数据</param>
+        protected abstract void OnReadyBytes(WSContext context, ArraySegment<byte> buffer, bool endOfMessage);
 
         /// <summary>
         /// 客户端关闭事件

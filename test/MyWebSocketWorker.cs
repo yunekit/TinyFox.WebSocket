@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TinyFox.WebSocket;
 
 namespace test
@@ -57,6 +58,16 @@ namespace test
             content.SendMessage(message);
         }
 
+        /// <summary>
+        /// 收到二进制数据
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="buffer"></param>
+        /// <param name="endOfMessage"></param>
+        protected override void OnReadyBytes(WSContext context, ArraySegment<byte> buffer, bool endOfMessage)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// 数据发送完成的事件

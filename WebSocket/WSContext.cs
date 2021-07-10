@@ -1,5 +1,9 @@
 ﻿namespace TinyFox.WebSocket
 {
+    using System;
+    using System.Threading.Tasks;
+    using System.Text;
+
 
     /// <summary>
     /// WebSocket会话上下文对象
@@ -106,11 +110,41 @@
 
 
         /// <summary>
-        /// 向客户端发送数据
+        /// 向客户端非阻塞发送文本数据(utf8字符集)
         /// </summary>
         /// <param name="msg"></param>
         public void SendMessage(string msg) { _ws.SendMessage(msg); }
 
+        /// <summary>
+        /// 向客户端非阻塞发送文本数据
+        /// </summary>
+        /// <param name="text">文本</param>
+        /// <param name="encoding">字符集</param>
+        public void SendMessage(string text, Encoding encoding) { _ws.SendMessage(text, encoding); }
+
+        /// <summary>
+        /// 异步发送文本数据
+        /// </summary>
+        /// <param name="msg">文本</param>
+        /// <param name="encoding">字符集</param>
+        /// <returns></returns>
+        public async Task SendMessageAsync(string msg, Encoding encoding) { await _ws.SendMessageAsync(msg, encoding); }
+
+        /// <summary>
+        /// 向客户端发送二进制数据
+        /// </summary>
+        /// <param name="buffer">数据</param>
+        /// <param name="isEndOfMessage">是否是一个继续发送任务的最后一个片断</param>
+        public void SendBytes(ArraySegment<byte> buffer, bool isEndOfMessage) { _ws.SendBytes(buffer, isEndOfMessage); }
+
+
+        /// <summary>
+        /// 异步发送二进制数据
+        /// </summary>
+        /// <param name="buffer">数据</param>
+        /// <param name="isEndOfMsg">是否是最后一块数据</param>
+        /// <returns></returns>
+        public async Task SendBytesAsync(ArraySegment<byte> buffer, bool isEndOfMsg) { await _ws.SendBytesAsync(buffer, isEndOfMsg); }
 
         /// <summary>
         /// 关闭与客户端的连接
