@@ -135,7 +135,7 @@
         /// </summary>
         /// <param name="buffer">数据</param>
         /// <param name="isEndOfMessage">是否是一个继续发送任务的最后一个片断</param>
-        public void SendBytes(ArraySegment<byte> buffer, bool isEndOfMessage) { _ws.SendBytes(buffer, isEndOfMessage); }
+        public void SendBytes(ArraySegment<byte> buffer, bool isEndOfMessage = true) { _ws.SendBytes(buffer, isEndOfMessage); }
 
 
         /// <summary>
@@ -144,7 +144,7 @@
         /// <param name="buffer">数据</param>
         /// <param name="isEndOfMsg">是否是最后一块数据</param>
         /// <returns></returns>
-        public async Task SendBytesAsync(ArraySegment<byte> buffer, bool isEndOfMsg) { await _ws.SendBytesAsync(buffer, isEndOfMsg); }
+        public async Task SendBytesAsync(ArraySegment<byte> buffer, bool isEndOfMsg = true) { await _ws.SendBytesAsync(buffer, isEndOfMsg); }
 
         /// <summary>
         /// 关闭与客户端的连接
