@@ -9,7 +9,7 @@
     <Company>www.linuxdot.net</Company>
     <AssemblyVersion>1.1.0</AssemblyVersion>
     <FileVersion>1.1.0</FileVersion>
-    <Version>1.1.1</Version>
+    <Version>1.2.0</Version>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/yuneike/TinyFox.WebSocket</PackageProjectUrl>
